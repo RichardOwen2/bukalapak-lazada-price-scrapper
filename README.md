@@ -7,7 +7,7 @@ A Python library for scraping product prices from Bukalapak and Lazada.
 You can install the package from PyPI:
 
 ```python
-pip install bukalapak-lazada-price-scrapper==0.1.0
+pip install bukalapak-lazada-price-scrapper
 ```
 
 ## Requirements
