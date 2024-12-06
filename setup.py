@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="price_scraper",
+    name="bukalapak-lazada-price-scrapper",
     version="0.1.0",
     description="A package for scraping product prices from Bukalapak and Lazada.",
     author="Richard Owen Hoan",
