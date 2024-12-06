@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="bukalapak-lazada-price-scrapper",
-    version="0.2.0",
+    version="0.2.2",
     description="A package for scraping product prices from Bukalapak and Lazada.",
     author="Richard Owen Hoan",
     author_email="richardowen2411@gmail.com",
-    url="https://github.com/RichardOwen2/bukalapak-lazada-price-scrapper",  # Change to your GitHub repo
+    url="https://github.com/RichardOwen2/bukalapak-lazada-price-scrapper", 
     packages=find_packages(),
     install_requires=[
         'selenium',

@@ -18,7 +18,7 @@ pip install bukalapak-lazada-price-scrapper
 ## Usage
 
 ```python
-from bukalapak_lazada_scraper import search
+from bukalapak_lazada_price_scraper import search
 
 search_query = "iphone"
 
@@ -36,7 +36,7 @@ print(bukalapak_results)
 it will automatic inject driver with beautifulsoap scraper and soap initilation
 
 ```python
-from bukalapak_lazada_scraper import search
+from bukalapak_lazada_price_scraper import search
 
 search_query = "iphone"
 
