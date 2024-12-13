@@ -18,7 +18,7 @@ pip install bukalapak-lazada-price-scrapper
 ## Usage
 
 ```python
-from bukalapak_lazada_price_scraper import search
+from bukalapak_lazada_price_scrapper import search
 
 search_query = "iphone"
 
@@ -36,7 +36,7 @@ print(bukalapak_results)
 it will automatic inject driver with beautifulsoap scraper and soap initilation
 
 ```python
-from bukalapak_lazada_price_scraper import search
+from bukalapak_lazada_price_scrapper import search
 
 search_query = "iphone"
 
@@ -50,40 +50,51 @@ print(result)
 ## Example of dynamic function
 
 ```python
-def some_marketplace_function(driver, init_soap, query):
-  # init
-  url = f'https://url/?q={search_query}'
+def some_marketplace_function(driver, init_soup, query):
+  url = f'https://www.bukalapak.com/products?search[keywords]={search_query}'
 
-  driver.get(url)
+  try:
+    # Open the Marketplace url
+    driver.get(url)
 
-  WebDriverWait(driver, 30).until(
-    EC.presence_of_all_elements_located((By.CLASS_NAME, 'Ms6aG'))
-  )
+    # Wait for the price elements to be loaded
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, 'bl-product-card-new__price'))
+    )
 
-  page_source = driver.page_source
+    # Get the page source after JS is rendered
+    page_source = driver.page_source
 
-  soup = init_soup(page_source, 'html.parser')
+    # Initialize Beautiful soup
+    soup = init_soup(page_source, 'html.parser')
 
-  product_cards = soup.find_all('div', {'data-tracking': 'product-card'})
+    # Search Product Logic
+    product_cards = soup.find_all('div', class_='bl-product-card-new__wrapper')
 
-  for card in product_cards:
-    name_tag = card.find('a', title=True)
-    product_name = name_tag.text.strip() if name_tag else "No product name"
+    if not product_cards:
+        return {"error": "No product cards found. Page might not have loaded correctly."}
 
-    price_tag = card.find('span', class_='ooOxS')
-    product_price = price_tag.text.strip() if price_tag else "No price available"
+    for card in product_cards:
+        name_tag = card.find('p', class_='bl-text bl-text--body-14 bl-text--secondary bl-text--ellipsis__2')
+        product_name = name_tag.text.strip() if name_tag else "No product name"
 
-    link_tag = card.find('a', href=True)
-    product_link = f"https:{link_tag['href']}" if link_tag else "No link available"
+        price_tag = card.find('p', class_='bl-text bl-text--semi-bold bl-text--ellipsis__1 bl-product-card-new__price')
+        product_price = price_tag.text.strip() if price_tag else "No price available"
+        
+        link_tag = card.find('a', class_='bl-link')
+        product_link = link_tag['href'] if link_tag else "No link available"
 
-    products.append({
-        'name': product_name,
-        'price': product_price,
-        'link': product_link
-    })
+        products.append({
+            'name': product_name,
+            'price': product_price,
+            'link': product_link
+        })
 
-  # Sort products by price in ascending order (cheapest first)
-  products.sort(key=lambda x: x['price'])
+    products.sort(key=lambda x: x['price'])
 
-  return products
+    return products
+  except Exception as e:
+      return {"error": str(e)}
+  finally:
+      driver.quit()
 ```
